@@ -1,8 +1,75 @@
-flask==3.0.0
-flask-cors==4.0.0
-openai==1.51.0
-python-dotenv==1.0.0
-google-generativeai
-# python-dotenv
-gunicorn
+**“I worked on a very interesting project where I used the Grounding DINO model to perform zero-shot object detection.
+The motivation actually came from a practical problem: most object detectors like YOLO or Faster R-CNN can only detect the classes they were trained on.
+So if I ask them to detect something like ‘a yellow mug’ or ‘a statue’, and these weren’t part of their training set, they simply fail.
 
+I wanted to build a system that doesn’t have this limitation.”**
+
+⭐ Discovery Phase
+
+**“That’s where Grounding DINO became exciting for me.
+It connects vision and language — meaning I don’t need to retrain the model.
+I can literally describe an object in simple text, and the model tries to find it in the image.
+
+So my first goal was to understand:
+How well can this model detect completely unseen objects?”**
+
+⭐ Building the Pipeline
+
+**“I created a small but structured dataset using around 60 images from the COCO 2017 validation set.
+Then I built an end-to-end pipeline:
+
+preprocess images,
+
+design different prompt styles,
+
+run zero-shot detection,
+
+and finally evaluate using both mAP scores and visual inspection.
+
+I tested three prompt types — simple prompts, detailed prompts, and synonyms — because I wanted to see how much the wording affects the results.”**
+
+⭐ Unexpected Findings
+
+“One of the most interesting observations was how differently the model behaves based on object size.
+It actually performs best on small objects — which I honestly didn’t expect.
+But when the object is large, the performance drops significantly.”
+
+⭐ Why This Happens
+
+**“After analysis, I found the core reason: NMS — Non-Max Suppression.
+NMS works really well for small objects because it removes redundant boxes.
+But for large objects, it becomes too aggressive and cuts off valid bounding box areas.
+
+So the model knows the object is there — the classification is correct — but the box gets clipped or misplaced.”**
+
+⭐ Prompt Sensitivity
+
+“Another important thing I discovered was that the prompt really matters.
+If I write just ‘person’, the detection is weaker.
+But if I give a descriptive prompt like ‘a man in a red shirt standing on the left’, the model performs much better.
+Synonyms work too, but not always consistently — because the embedded meaning changes slightly.”
+
+⭐ Where It Fails
+
+**“The model struggled mainly in three cases:
+
+Occluded objects,
+
+Odd camera angles,
+
+Very generic prompts.
+
+And again, large objects were the biggest challenge because of the NMS behavior.”**
+
+⭐ How I Would Improve It
+
+**“In the next version, I want to tune the similarity ratio between the text and visual features, so NMS doesn’t suppress large objects too early.
+I also want to experiment with dynamic NMS thresholds depending on object size.
+
+Plus, I want to try newer open-vocabulary models like OWLv2, Grounding DINO 1.5, and YOLO-World to benchmark the results.”**
+
+⭐ Final Wrap-Up
+
+**“Overall, this project taught me a lot about zero-shot detection — especially how language prompts influence the results, how multimodal models behave, and how important post-processing like NMS is.
+
+It also showed me how we can build flexible object detection systems without retraining, which is very useful for real-world applications like smart visual assistants and search systems.”**
