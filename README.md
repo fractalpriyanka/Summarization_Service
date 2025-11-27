@@ -2,6 +2,17 @@
 
 AI-powered document summarization using Google Generative AI (Gemini)
 
+---
+## 🚀 Live Demo
+
+### 🔗 Frontend (Netlify)
+https://summarizationservices.netlify.app/
+
+### 🔗 Backend API (Render)
+https://summarization-service-zqvp.onrender.com
+
+---
+
 ## Features
 
 - Multiple input methods (file upload / text paste)
