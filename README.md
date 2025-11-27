@@ -176,7 +176,7 @@ Summarization Service/
 ## Environment Variables
 
 ```
-GEMINI_API_KEY=AIzaSyD0jouwnpF9GXIwvDi3xditc2ivthN1oCM
+GEMINI_API_KEY=YOUR API KEY
 ```
 
 ## Troubleshooting
