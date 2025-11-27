@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = "https://summarization-service-fljf.onrender.com";
+const API_BASE_URL = "http://localhost:5000/api";
 
 // DOM Elements
 const fileInput = document.getElementById("fileInput");

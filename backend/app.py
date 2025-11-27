@@ -138,7 +138,9 @@ if __name__ == '__main__':
     print(f"✅ API Key configured: {api_key[:8]}...{api_key[-4:]}")
     print("="*50)
     
-    app.run(debug=True, port=5000)
+     # Use PORT from environment (Render sets this)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
     
     # python -m http.server 8000
     # python backend/app.py
