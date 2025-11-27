@@ -1,4 +1,5 @@
 // API Configuration
+// Use your live Render backend URL
 const API_BASE_URL = "https://summarization-service-zqvp.onrender.com/api";
 
 // DOM Elements
@@ -67,7 +68,7 @@ async function checkAPIHealth() {
     apiStatus.textContent = "✗ Server Offline";
     apiStatus.classList.add("error");
     showError(
-      "Cannot connect to backend server. Please ensure:\n1. Backend server is running (python app.py)\n2. Server is on port 5000"
+      "Cannot connect to backend server. Please ensure:\n1. Backend is deployed and running on Render.\n2. API_BASE_URL is correctly set."
     );
   }
 }
@@ -97,16 +98,59 @@ async function handleFileUpload(event) {
   }
 
   try {
-    const text = await file.text();
+    let text = "";
+
+    if (fileExtension === ".pdf") {
+      // 📄 PDF → extract text using pdf.js
+      text = await extractPdfText(file);
+    } else {
+      // 📝 Plain text-based files
+      text = await file.text();
+    }
+
     textInput.value = text;
     fileName.textContent = `📄 ${file.name}`;
     updateTextStats();
     hideAllStates();
     showEmptyState();
   } catch (error) {
+    console.error(error);
     showError("Error reading file. Please try again.");
     fileInput.value = "";
   }
+}
+
+// Extract text from PDF using PDF.js
+async function extractPdfText(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = async (e) => {
+      try {
+        const typedArray = new Uint8Array(e.target.result);
+
+        // pdfjsLib is provided by the PDF.js script included in HTML
+        const loadingTask = pdfjsLib.getDocument({ data: typedArray });
+        const pdf = await loadingTask.promise;
+
+        let fullText = "";
+
+        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+          const page = await pdf.getPage(pageNum);
+          const textContent = await page.getTextContent();
+          const pageText = textContent.items.map((item) => item.str).join(" ");
+          fullText += pageText + "\n\n";
+        }
+
+        resolve(fullText);
+      } catch (err) {
+        reject(err);
+      }
+    };
+
+    reader.onerror = (err) => reject(err);
+    reader.readAsArrayBuffer(file);
+  });
 }
 
 // Handle Text Input
@@ -193,12 +237,13 @@ async function handleSummarize() {
     successState.classList.remove("hidden");
     summaryOutput.textContent = data.summary;
 
-    // Show metadata
+    // Show metadata (tokens_used may not exist, so default to "-")
+    const tokensUsed = data.tokens_used ?? "-";
     summaryMeta.innerHTML = `
-            <strong>Style:</strong> ${capitalizeFirst(data.style)} | 
-            <strong>Model:</strong> ${data.model} | 
-            <strong>Tokens used:</strong> ${data.tokens_used}
-        `;
+      <strong>Style:</strong> ${capitalizeFirst(data.style)} | 
+      <strong>Model:</strong> ${data.model} | 
+      <strong>Tokens used:</strong> ${tokensUsed}
+    `;
   } catch (error) {
     showError(error.message);
   } finally {
