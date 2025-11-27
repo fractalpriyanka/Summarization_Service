@@ -26,9 +26,9 @@
             <label for="fileInput" class="file-label">
               <span class="upload-icon">📁</span>
               <span class="upload-text">Click to upload file</span>
-              <span class="upload-hint">.txt, .md, .json (max 5MB)</span>
+              <span class="upload-hint">.txt, .md, .json, .pdf (max 5MB)</span>
             </label>
-            <input type="file" id="fileInput" accept=".txt,.md,.json" />
+            <input type="file" id="fileInput" accept=".txt,.md,.json, .pdf" />
             <div id="fileName" class="file-name"></div>
           </div>
 
@@ -175,7 +175,7 @@
         </div>
       </div>
     </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
