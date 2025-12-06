@@ -31,7 +31,24 @@ def get_style_prompt(style, text):
     prompts = {
         'brief': f"You are a skilled summarizer. Create a brief, concise summary in 2-3 sentences that captures the main ideas.\n\nSummarize the following text:\n\n{text}",
         'detailed': f"You are a skilled summarizer. Create a detailed, comprehensive summary that includes key points, important details, and main arguments in well-organized paragraphs.\n\nSummarize the following text:\n\n{text}",
-        'bullets': f"You are a skilled summarizer. Create a bulleted summary that extracts the main points and key takeaways in a clear, organized list format.\n\nSummarize the following text as bullet points:\n\n{text}"
+        "bullets": f"""
+You are an expert summarizer. Produce a clear, concise bullet-point summary that highlights:
+
+• Main ideas  
+• Key takeaways  
+• Important facts, insights, or actions  
+
+Guidelines:
+• Use standard bullet points (•), not stars or numbers  
+• Keep each bullet short and direct  
+• Preserve meaning while removing redundancy  
+• Maintain logical structure and readability for UI display  
+
+Summarize the following text as bullet points:
+
+{text}
+"""
+
     }
     return prompts.get(style, prompts['brief'])
 
